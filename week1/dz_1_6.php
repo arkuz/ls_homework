@@ -5,15 +5,15 @@ const NUM_FINISH = 10;
 
 $multiTable = [];
 
-function getFormattedValue(&$multiTable, $i, $j)
+function getFormattedValue($value, $i, $j)
 {
-    $curValue = $multiTable[$i][$j];
-
     if (!($i % 2) && !($j % 2)) {
-        return "($curValue)";
-    } elseif ($i % 2 && $j % 2) {
-        return "[$curValue]";
-    } else return "$curValue";
+        return "($value)";
+    }
+    if ($i % 2 && $j % 2) {
+        return "[$value]";
+    }
+    return "$value";
 }
 
 for($i = NUM_START; $i <= NUM_FINISH; $i++) {
@@ -26,7 +26,7 @@ echo "<table>";
 for($i = NUM_START; $i <= NUM_FINISH; $i++) {
     echo "<tr>";
     for($j = NUM_START; $j <= NUM_FINISH; $j++) {
-        $value = getFormattedValue($multiTable, $i, $j);
+        $value = getFormattedValue($multiTable[$i][$j], $i, $j);
         echo "<td> $value </td>";
     }
     echo "</tr>";
