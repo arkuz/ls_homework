@@ -13,6 +13,5 @@ switch (true):
         break;
     default:
         echo "Неизвестный день";
-        break;
 endswitch;
 
