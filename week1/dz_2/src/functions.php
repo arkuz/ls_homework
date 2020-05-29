@@ -6,9 +6,9 @@ function task1(array $arrStr, bool $print = false)
     foreach ($arrStr as $word) {
         if (!$print) {
             echo "<p> $word </p>";
-            continue;
+        } else {
+            $str .= $word . ' ';
         }
-        $str .= $word . ' ';
     }
     if ($print) {
         return $str;
