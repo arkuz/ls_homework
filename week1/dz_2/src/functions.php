@@ -53,6 +53,9 @@ function task2(... $args): string
                 $total *= $value;
                 break;
             case '/':
+                if ($value == 0) {
+                    throw new Exception('Ошибка: Деление на ноль');
+                }
                 $total /= $value;
                 break;
         }
