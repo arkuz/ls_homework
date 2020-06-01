@@ -16,6 +16,7 @@ function getRandomName(): string
 
 function generateUsersArray(int $startPos = 0, int $finishPos = 50): array
 {
+    $users = [];
     for ($i = $startPos; $i < $finishPos; $i++) {
         $users[] = [
             'id' => $i,
