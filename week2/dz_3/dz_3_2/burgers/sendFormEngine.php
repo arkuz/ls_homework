@@ -134,10 +134,10 @@ function runEngine(PDO $pdo, array $post)
         "Номер вашего заказа: #$orderNum <br>" .
         "Это ваш $ordersCount-й заказ! <br>";
 
-    return $resStr;
+    return ['info' => $resStr];
 }
 
 validationForm($_POST);
 $pdo = connection(CONNECTION_STRING, DB_USER, DB_PASSWORD);
-$res = runEngine($pdo, $_POST);
+$res = json_encode(runEngine($pdo, $_POST));
 echo $res;
