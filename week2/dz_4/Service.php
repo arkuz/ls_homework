@@ -3,65 +3,75 @@
 
 namespace Service;
 
-require_once "Types.php";
-use Types\ServiceType;
+require_once "ConvertTimeFunc.php";
+
+use ConvertTimeFunc\convertTime;
+
 
 interface I_Service
 {
-    //public function applyToTariff(); // сделал применение услуги к тарифу
-
-    public function getServiceType(): int;
-
-    public function getServiceName(): string;
-
-    public function getPrice(): float;
-
+    /**
+     * итоговая стоимость услуги перерасчитанная с учетом километража и/или времени
+     * @return float
+     */
+    public function getCalculatedPrice(): float;
 }
 
 abstract class Service implements I_Service
 {
-    protected $serviceName;
-    protected $serviceType;
-    protected $price;
+    use convertTime;
 
-    public function getServiceType(): int
-    {
-        return $this->serviceType;
-    }
+    protected $calculatedPrice;
 
-    public function getServiceName(): string
-    {
-        return $this->serviceName;
-    }
+    /**
+     * базовая стоимость услуги
+     * @return float
+     */
+    abstract protected function getServicePrice(): float;
 
-    public function getPrice(): float
+    public function getCalculatedPrice(): float
     {
-        return $this->price;
+        return $this->calculatedPrice;
     }
 }
 
+/**
+ * Class GPSService
+ * Услуга Gps в салон - 15 рублей в час, минимум 1 час. Округление в большую сторону.
+ * @package Service
+ */
 class GPSService extends Service
 {
-    const DEFAULT_PRICE = 15;
-
-    public $oneHourAndMore = true; // признак, что услуга может быть от 1 часа и более
-
-    public function __construct(float $rubles = self::DEFAULT_PRICE)
+    public function __construct(float $minCount)
     {
-        $this->price = ($rubles < 0) ? self::DEFAULT_PRICE : $rubles;
-        $this->serviceName = "GPS";
-        $this->serviceType = ServiceType::TYPE_PER_HOUR;
+        $hours = $this->minToHours($minCount);
+        if ($hours >= 0 && $hours < 1) {
+            $this->calculatedPrice = 0;
+        } else {
+            $this->calculatedPrice = ceil($hours) * $this->getServicePrice();
+        }
+    }
+
+    protected function getServicePrice(): float
+    {
+        return 15;
     }
 }
 
+/**
+ * Class AdditionalDriverService
+ * Услуга Дополнительный водитель - 100 рублей единоразово
+ * @package Service
+ */
 class AdditionalDriverService extends Service
 {
-    const DEFAULT_PRICE = 100;
-
-    public function __construct(float $rubles = self::DEFAULT_PRICE)
+    public function __construct()
     {
-        $this->price = ($rubles < 0) ? self::DEFAULT_PRICE : $rubles;
-        $this->serviceName = "Дополнительный водитель";
-        $this->serviceType = ServiceType::TYPE_ONE_TIME;
+        $this->calculatedPrice = $this->getServicePrice();
+    }
+
+    protected function getServicePrice(): float
+    {
+        return 100;
     }
 }

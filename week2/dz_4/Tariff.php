@@ -4,10 +4,9 @@
 namespace Tariff;
 
 require_once "Service.php";
-require_once "Types.php";
 
+use ConvertTimeFunc\convertTime;
 use Service\I_Service;
-use Types\ServiceType;
 
 
 interface I_Tariff
@@ -19,79 +18,93 @@ interface I_Tariff
 
 abstract class Tariff implements I_Tariff
 {
-    protected $kmCount; // кол-во километров
-    protected $minCount; // кол-во минут
-    protected $tariffName; // название тарифа
-    protected $services = []; // массив для услуг
+    /**
+     * кол-во километров
+     * @var float|int
+     */
+    protected $kmCount;
 
-    protected $tariffPrice; // сумма по тарифу
-    protected $servicePrice; // сумма по услугам
-    protected $totalPrice; // общая сумма тарифа с услугами
-
-    protected $pricePerKm; // стомость километра
-    protected $pricePerMin; // стоимость минуты
+    /**
+     * кол-во минут
+     * @var float|int
+     */
+    protected $minCount;
+    /**
+     * массив добавленных услуг
+     * @var array
+     */
+    protected $services = [];
+    /**
+     * сумма по тарифу
+     * @var
+     */
+    protected $tariffPrice;
+    /**
+     * сумма по услугам
+     * @var
+     */
+    protected $servicePrice;
+    /**
+     * общая сумма тарифа с услугами
+     * @var
+     */
+    protected $totalPrice;
 
     public function __construct(float $kmCount, float $minCount)
     {
-        $this->kmCount = ($kmCount < 0) ? 0 : $kmCount;
-        $this->minCount = ($minCount < 0) ? 0 : $minCount;
+        $this->kmCount = ($kmCount <= 0) ? 1 : $kmCount;
+        $this->minCount = ($minCount <= 0) ? 1 : $minCount;
     }
 
+    /**
+     * цена тарифа за километр
+     * @return float
+     */
+    abstract protected function getPricePerKm(): float;
+
+    /**
+     * цена тарифа за минуту
+     * @return float
+     */
+    abstract protected function getPricePerMin(): float;
+
+    /**
+     * метод добавления услуги к тарифу
+     * @param I_Service $service
+     */
     public function applyService(I_Service $service)
     {
-        // проверка при добавлении почасовой услуги
-        if (isset($service->oneHourAndMore)) {
-            $hours = $this->minToHours();
-            if ($hours > 0 && $hours < 1) {
-                return;
-            }
+        if ($service->getCalculatedPrice() > 0) {
+            $this->services[] = $service;
         }
-        $this->services[] = $service;
     }
 
+    /**
+     * метод расчета стоимости всех услуг
+     * @return float
+     */
     public function calcServices(): float
     {
         $total = 0;
         if (!empty($this->services)) {
             foreach ($this->services as $service) {
-                if ($service->getServiceType() == ServiceType::TYPE_ONE_TIME) {
-                    $total += $service->getPrice();
-                }
-                if ($service->getServiceType() == ServiceType::TYPE_PER_HOUR) {
-                    $total += $service->getPrice() * round($this->minToHours());
-                }
+                $total += $service->getCalculatedPrice();
             }
-            return $total;
         }
-        return 0;
+        return $total;
     }
 
+    /**
+     * метод расчета полной стоимости тарифа с учетом услуг
+     */
     public function calcPrice()
     {
-        $kmPrice = $this->kmCount * $this->pricePerKm;
-        $minPrice = $this->minCount * $this->pricePerMin;
+        $kmPrice = $this->kmCount * $this->getPricePerKm();
+        $minPrice = $this->minCount * $this->getPricePerMin();
 
         $this->tariffPrice = $kmPrice + $minPrice;
         $this->servicePrice = $this->calcServices();
         $this->totalPrice = $this->tariffPrice + $this->servicePrice;
-    }
-
-    public function calcAndPrintTariff()
-    {
-        $this->calcServices(); // расчитать услуги
-        $this->calcPrice(); // расчитать тариф
-        echo "Тариф: {$this->getTariffName()}" . "<br>";
-        echo "Километры: {$this->getKmCount()}, минуты: {$this->getMinCount()}" . "<br>";
-        if (!empty($this->services)) {
-            echo " - Услуги: " . "<br>";
-            foreach ($this->services as $service) {
-                echo "   - {$service->getServiceName()}" . "<br>";
-            }
-        }
-        echo "Стоимость по тарифу: {$this->getTariffPrice()} р." . "<br>";
-        echo "Стоимость услуг: {$this->getServicePrice()} р." . "<br>";
-        echo "Общая стоимость: {$this->getTotalPrice()} р." . "<br>";
-        echo "-------------------------------" . "<br>";
     }
 
     public function getKmCount()
@@ -119,53 +132,72 @@ abstract class Tariff implements I_Tariff
         return $this->totalPrice;
     }
 
-    public function getTariffName()
+    public function getServices()
     {
-        return $this->tariffName;
+        return $this->services;
     }
 
-    private function minToHours()
-    {
-        $minInHour = 60;
-        return $this->minCount / $minInHour;
-    }
 }
 
-
+/**
+ * Class BaseTariff
+ * Базовый тариф
+ * @package Tariff
+ */
 class BaseTariff extends Tariff
 {
-    public function __construct(float $kmCount, float $minCount)
+    protected function getPricePerKm(): float
     {
-        parent::__construct($kmCount, $minCount);
-        $this->tariffName = 'Базовый';
-        $this->pricePerKm = 10;
-        $this->pricePerMin = 3;
+        return 10;
+    }
+
+    protected function getPricePerMin(): float
+    {
+        return 3;
     }
 }
 
-
+/**
+ * Class StudentTariff
+ * Студенческий тариф
+ * @package Tariff
+ */
 class StudentTariff extends BaseTariff
 {
-    public function __construct(float $kmCount, float $minCount)
+    protected function getPricePerKm(): float
     {
-        parent::__construct($kmCount, $minCount);
-        $this->tariffName = 'Студенческий';
-        $this->pricePerKm = 4;
-        $this->pricePerMin = 1;
+        return 4;
+    }
+
+    protected function getPricePerMin(): float
+    {
+        return 1;
     }
 }
 
-
+/**
+ * Class HourlyTariff
+ * Почасовой тариф
+ * @package Tariff
+ */
 class HourlyTariff extends BaseTariff
 {
+    use convertTime;
+
     public function __construct(float $kmCount, float $hourCount)
     {
-        // округляем часы в большую сторону и приводим к минутам
-        $minCount = ceil($hourCount) * 60;
+        $minCount = $this->hoursToMin(ceil($hourCount));
         parent::__construct($kmCount, $minCount);
-        $this->tariffName = 'Почасовой';
-        $this->pricePerKm = 0;
-        $this->pricePerMin = 200 / 60; // 1 час = 200р., 1 мин = 200 / 60
+    }
+
+    protected function getPricePerKm(): float
+    {
+        return 0;
+    }
+
+    protected function getPricePerMin(): float
+    {
+        return 200 / 60; // 1 час = 200р., 1 мин = 200 / 60
     }
 }
 
