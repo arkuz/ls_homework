@@ -4,9 +4,11 @@ require_once "Service.php";
 require_once "Tariff.php";
 
 use Service\I_Service;
+use Service\Service;
 use Service\GPSService;
 use Service\AdditionalDriverService;
 use Tariff\I_Tariff;
+use Tariff\Tariff;
 use Tariff\BaseTariff;
 use Tariff\StudentTariff;
 use Tariff\HourlyTariff;
@@ -16,7 +18,7 @@ use Tariff\HourlyTariff;
  * @param I_Tariff $tariff
  * @return string
  */
-function getTariffName(I_Tariff $tariff)
+function getTariffName(Tariff $tariff)
 {
     global $tariffsName;
     foreach ($tariffsName as $tName) {
@@ -32,7 +34,7 @@ function getTariffName(I_Tariff $tariff)
  * @param I_Service $service
  * @return string
  */
-function getServiceName(I_Service $service)
+function getServiceName(Service $service)
 {
     global $servicesName;
     foreach ($servicesName as $sName) {
@@ -43,8 +45,9 @@ function getServiceName(I_Service $service)
     return 'Неизвестная услуга';
 }
 
-function printPriceOfTrip(I_Tariff $tariff)
+function printPriceOfTrip(Tariff $tariff)
 {
+
     echo "<pre>";
     $tariffName = getTariffName($tariff);
     echo "Тариф: $tariffName" . "<br>";
@@ -52,6 +55,9 @@ function printPriceOfTrip(I_Tariff $tariff)
     if (!empty($tariff->getServices())) {
         echo " - Услуги: " . "<br>";
         foreach ($tariff->getServices() as $service) {
+            /**
+             * @var $service I_Service
+             */
             $serviceName = getServiceName($service);
             echo "   - $serviceName - {$service->getCalculatedPrice()} р." . "<br>";
         }
