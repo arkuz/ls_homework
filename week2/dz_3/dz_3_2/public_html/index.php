@@ -1,3 +1,15 @@
+<?php
+
+if (!empty($_POST)) {
+    include __DIR__ . "/../config.php";
+    include __DIR__ . "/../src/sendFormEngine.php";
+    $response = main($_POST);
+    header("Content-type: application/json; charset=utf-8");
+    echo json_encode($response);
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="ru">
   <head>
@@ -6,8 +18,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Главная страница
     </title>
-    <link rel="stylesheet" href="./css/vendors.min.css">
-    <link rel="stylesheet" href="./css/main.min.css">
+    <link rel="stylesheet" href="css/vendors.min.css">
+    <link rel="stylesheet" href="css/main.min.css">
   </head>
   <body>
     <div class="wrapper">
@@ -15,7 +27,7 @@
         <section class="section hero">
           <div class="container">
             <header class="header">
-              <div class="header__logo"><a class="logo" href="#"><img class="logo__icon" src="./img/icons/logo.svg"></a></div>
+              <div class="header__logo"><a class="logo" href="#"><img class="logo__icon" src="img/icons/logo.svg"></a></div>
               <div class="header__menu">
                 <nav class="nav">
                   <ul class="nav__list">
@@ -39,7 +51,7 @@
             </header>
             <div class="hero__container">
               <div class="hero__content">
-                <div class="hero__left"><img class="hero__img" src="./img/content/burger.png" alt=""></div>
+                <div class="hero__left"><img class="hero__img" src="img/content/burger.png" alt=""></div>
                 <div class="hero__right">
                   <div class="section__title">Мы делаем</div>
                   <div class="hero__desc">Натуральные бургеры</div>
@@ -112,7 +124,7 @@
                     </div>
                     <div class="burger-weight__title">ккал</div>
                   </div>
-                  <div class="burgers-slider__left"><img class="burgers-slider__pic" src="./img/content/burgers/1.png" alt=""></div>
+                  <div class="burgers-slider__left"><img class="burgers-slider__pic" src="img/content/burgers/1.png" alt=""></div>
                   <div class="burgers-slider__right">
                     <div class="section__title section__title_white">Dark Beef Burger</div>
                     <div class="burgers-slider__text text-block">
@@ -133,7 +145,7 @@
                     </div>
                     <div class="burger-weight__title">ккал</div>
                   </div>
-                  <div class="burgers-slider__left"><img class="burgers-slider__pic" src="./img/content/burgers/2.png" alt=""></div>
+                  <div class="burgers-slider__left"><img class="burgers-slider__pic" src="img/content/burgers/2.png" alt=""></div>
                   <div class="burgers-slider__right">
                     <div class="section__title section__title_white">Dark Beef Burger</div>
                     <div class="burgers-slider__text text-block">
@@ -154,7 +166,7 @@
                     </div>
                     <div class="burger-weight__title">ккал</div>
                   </div>
-                  <div class="burgers-slider__left"><img class="burgers-slider__pic" src="./img/content/burgers/3.png" alt=""></div>
+                  <div class="burgers-slider__left"><img class="burgers-slider__pic" src="img/content/burgers/3.png" alt=""></div>
                   <div class="burgers-slider__right">
                     <div class="section__title section__title_white">Dark Beef Burger</div>
                     <div class="burgers-slider__text text-block">
@@ -175,7 +187,7 @@
                     </div>
                     <div class="burger-weight__title">ккал</div>
                   </div>
-                  <div class="burgers-slider__left"><img class="burgers-slider__pic" src="./img/content/burgers/4.png" alt=""></div>
+                  <div class="burgers-slider__left"><img class="burgers-slider__pic" src="img/content/burgers/4.png" alt=""></div>
                   <div class="burgers-slider__right">
                     <div class="section__title section__title_white">Dark Beef Burger</div>
                     <div class="burgers-slider__text text-block">
@@ -200,7 +212,7 @@
               <li class="team-acco__item"><a class="team-acco__trigger" href="#">дэниэл редклифф</a>
                 <div class="team-acco__content">
                   <div class="team-acco__pic">
-                    <div class="team-acco__img" style="background-image: url('./img/content/teammate.jpg');"></div>
+                    <div class="team-acco__img" style="background-image: url('img/content/teammate.jpg');"></div>
                   </div>
                   <div class="team-acco__text">
                     <div class="team-acco__title">Шеф-повар</div>
@@ -211,7 +223,7 @@
               <li class="team-acco__item"><a class="team-acco__trigger" href="#">ричард джеймс</a>
                 <div class="team-acco__content">
                   <div class="team-acco__pic">
-                    <div class="team-acco__img" style="background-image: url('./img/content/teammate.jpg');"></div>
+                    <div class="team-acco__img" style="background-image: url('img/content/teammate.jpg');"></div>
                   </div>
                   <div class="team-acco__text">
                     <div class="team-acco__title">Оператор</div>
@@ -222,7 +234,7 @@
               <li class="team-acco__item"><a class="team-acco__trigger" href="#">Джейк Финн</a>
                 <div class="team-acco__content">
                   <div class="team-acco__pic">
-                    <div class="team-acco__img" style="background-image: url('./img/content/teammate.jpg');"></div>
+                    <div class="team-acco__img" style="background-image: url('img/content/teammate.jpg');"></div>
                   </div>
                   <div class="team-acco__text">
                     <div class="team-acco__title">Менеджер</div>
@@ -233,7 +245,7 @@
               <li class="team-acco__item"><a class="team-acco__trigger" href="#">Николай Иванов</a>
                 <div class="team-acco__content">
                   <div class="team-acco__pic">
-                    <div class="team-acco__img" style="background-image: url('./img/content/teammate.jpg');"></div>
+                    <div class="team-acco__img" style="background-image: url('img/content/teammate.jpg');"></div>
                   </div>
                   <div class="team-acco__text">
                     <div class="team-acco__title">Шоколатье</div>
@@ -247,7 +259,7 @@
         <section class="section menu">
           <div class="section__title section__title_white menu__title">Меню</div>
           <ul class="menu-acco">
-            <li class="menu-acco__item"><a class="menu-acco__trigger" href="#" style="background-image: url('./img/bg/menu/meats.jpg');">
+            <li class="menu-acco__item"><a class="menu-acco__trigger" href="#" style="background-image: url('img/bg/menu/meats.jpg');">
                 <div class="menu-acco__trigger-text">Для мясоедов</div></a>
               <div class="menu-acco__content">
                 <div class="menu-acco__text">
@@ -256,7 +268,7 @@
                 </div>
               </div>
             </li>
-            <li class="menu-acco__item"><a class="menu-acco__trigger" href="#" style="background-image: url('./img/bg/menu/vegans.jpg');">
+            <li class="menu-acco__item"><a class="menu-acco__trigger" href="#" style="background-image: url('img/bg/menu/vegans.jpg');">
                 <div class="menu-acco__trigger-text">Вегетарианское</div></a>
               <div class="menu-acco__content">
                 <div class="menu-acco__text">
@@ -265,7 +277,7 @@
                 </div>
               </div>
             </li>
-            <li class="menu-acco__item"><a class="menu-acco__trigger" href="#" style="background-image: url('./img/bg/menu/diets.jpg');">
+            <li class="menu-acco__item"><a class="menu-acco__trigger" href="#" style="background-image: url('img/bg/menu/diets.jpg');">
                 <div class="menu-acco__trigger-text">Диетическое</div></a>
               <div class="menu-acco__content">
                 <div class="menu-acco__text">
@@ -280,7 +292,7 @@
           <ul class="reviews__list">
             <li class="reviews__item">
               <div class="review">
-                <div class="review__photo" style="background-image: url('./img/content/reviews/1.jpg');"></div>
+                <div class="review__photo" style="background-image: url('img/content/reviews/1.jpg');"></div>
                 <div class="review__hover">
                   <div class="review__title">Константин Спилберг</div>
                   <div class="review__shorttext">Мысли все о них и о них, о них и о них. Нельзя устоять, невозможно забыть... Никогда не думал, что булочки могут быть такими мягкими, котлетка такой сочной, а сыр таким расплавленным.</div>
@@ -290,7 +302,7 @@
             </li>
             <li class="reviews__item">
               <div class="review">
-                <div class="review__photo" style="background-image: url('./img/content/reviews/2.jpg');"></div>
+                <div class="review__photo" style="background-image: url('img/content/reviews/2.jpg');"></div>
                 <div class="review__hover">
                   <div class="review__title">Константин Спилберг</div>
                   <div class="review__shorttext">Мысли все о них и о них, о них и о них. Нельзя устоять, невозможно забыть... Никогда не думал, что булочки могут быть такими мягкими, котлетка такой сочной, а сыр таким расплавленным.</div>
@@ -300,7 +312,7 @@
             </li>
             <li class="reviews__item">
               <div class="review">
-                <div class="review__photo" style="background-image: url('./img/content/reviews/3.jpg');"></div>
+                <div class="review__photo" style="background-image: url('img/content/reviews/3.jpg');"></div>
                 <div class="review__hover">
                   <div class="review__title">Константин Спилберг</div>
                   <div class="review__shorttext">Мысли все о них и о них, о них и о них. Нельзя устоять, невозможно забыть... Никогда не думал, что булочки могут быть такими мягкими, котлетка такой сочной, а сыр таким расплавленным.</div>
@@ -310,7 +322,7 @@
             </li>
             <li class="reviews__item">
               <div class="review">
-                <div class="review__photo" style="background-image: url('./img/content/reviews/4.jpg');"></div>
+                <div class="review__photo" style="background-image: url('img/content/reviews/4.jpg');"></div>
                 <div class="review__hover">
                   <div class="review__title">Константин Спилберг</div>
                   <div class="review__shorttext">Мысли все о них и о них, о них и о них. Нельзя устоять, невозможно забыть... Никогда не думал, что булочки могут быть такими мягкими, котлетка такой сочной, а сыр таким расплавленным.</div>
@@ -320,7 +332,7 @@
             </li>
             <li class="reviews__item">
               <div class="review">
-                <div class="review__photo" style="background-image: url('./img/content/reviews/5.jpg');"></div>
+                <div class="review__photo" style="background-image: url('img/content/reviews/5.jpg');"></div>
                 <div class="review__hover">
                   <div class="review__title">Константин Спилберг</div>
                   <div class="review__shorttext">Мысли все о них и о них, о них и о них. Нельзя устоять, невозможно забыть... Никогда не думал, что булочки могут быть такими мягкими, котлетка такой сочной, а сыр таким расплавленным.</div>
@@ -330,7 +342,7 @@
             </li>
             <li class="reviews__item">
               <div class="review">
-                <div class="review__photo" style="background-image: url('./img/content/reviews/6.jpg');"></div>
+                <div class="review__photo" style="background-image: url('img/content/reviews/6.jpg');"></div>
                 <div class="review__hover">
                   <div class="review__title">Константин Спилберг</div>
                   <div class="review__shorttext">Мысли все о них и о них, о них и о них. Нельзя устоять, невозможно забыть... Никогда не думал, что булочки могут быть такими мягкими, котлетка такой сочной, а сыр таким расплавленным.</div>
@@ -340,7 +352,7 @@
             </li>
             <li class="reviews__item">
               <div class="review">
-                <div class="review__photo" style="background-image: url('./img/content/reviews/7.jpg');"></div>
+                <div class="review__photo" style="background-image: url('img/content/reviews/7.jpg');"></div>
                 <div class="review__hover">
                   <div class="review__title">Константин Спилберг</div>
                   <div class="review__shorttext">Мысли все о них и о них, о них и о них. Нельзя устоять, невозможно забыть... Никогда не думал, что булочки могут быть такими мягкими, котлетка такой сочной, а сыр таким расплавленным.</div>
@@ -350,7 +362,7 @@
             </li>
             <li class="reviews__item">
               <div class="review">
-                <div class="review__photo" style="background-image: url('./img/content/reviews/8.jpg');"></div>
+                <div class="review__photo" style="background-image: url('img/content/reviews/8.jpg');"></div>
                 <div class="review__hover">
                   <div class="review__title">Константин Спилберг</div>
                   <div class="review__shorttext">Мысли все о них и о них, о них и о них. Нельзя устоять, невозможно забыть... Никогда не думал, что булочки могут быть такими мягкими, котлетка такой сочной, а сыр таким расплавленным.</div>
@@ -501,26 +513,29 @@
         <div class="status-popup__message error-message">Произошла ошибка</div><a class="status-popup__close btn" href="#">Закрыть</a>
       </div>
     </div>
-    <script src="./js/vendors.min.js"></script>
+    <script src="js/vendors.min.js"></script>
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
-    <script src="./js/main.min.js"></script>
-    <script src="./js/jquery-3.5.1.min.js" type="text/javascript"></script>
+    <script src="js/main.min.js"></script>
+    <script src="js/jquery-3.5.1.min.js" type="text/javascript"></script>
     <script>
       $('#order-form').submit(function(e) {
         e.preventDefault();
         $.ajax({
           type: $(this).attr('method'),
-          url: './sendFormEngine.php',
+          url: 'index.php',
           data: $(this).serialize(),
           async: false,
           dataType: "json",
           success: function(result){
-            //alert('Форма отправлена');
             if (result['error']) {
-              result = result['error'];
+                err = result['error'];
+                result = "";
+              for (val of err) {
+                  result += val + "<br>";
+              }
             }
-            if (result['info']) {
-              result = result['info'];
+            if (result['result']) {
+              result = result['result'];
             }
             $('#ajaxResponse').html(result);
           }

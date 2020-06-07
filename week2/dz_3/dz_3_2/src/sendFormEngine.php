@@ -1,42 +1,31 @@
 <?php
 
-const DB_HOST = 'localhost';
-const DB_NAME = 'week2_dz3_2';
-const CONNECTION_STRING = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';';
-const DB_USER = 'root';
-const DB_PASSWORD = 'root';
 
-function connection(string $dsn, string $username, string $password): PDO
+
+function connection(): PDO
 {
-    try {
-        return new PDO($dsn, $username, $password);
-    } catch (PDOException $e) {
-        echo json_encode(['error' => $e->getMessage()]);
-        die;
+    if (empty(DB_HOST) || empty(DB_NAME) || empty(DB_USER)) {
+        throw new Exception('Configuration parameters are not filled');
     }
+    global $pdo;
+    $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';';
+    $pdo = new PDO($dsn, DB_USER, DB_PASSWORD);
+    return $pdo;
 }
 
 function validationForm(array $post)
 {
-    $errStr = '';
-
+    $result = [];
     if (empty($post['name'])) {
-        $errStr = 'name is empty';
+        $result[] = 'name is empty';
     }
-
     if (empty($post['email'])) {
-        $errStr = 'email is empty';
+        $result[] = 'email is empty';
     }
-
     if (empty($post['phone'])) {
-        $errStr = 'phone is empty';
+        $result[] = 'phone is empty';
     }
-
-    if (!empty($errStr)) {
-        echo json_encode(['error' => $errStr]);
-        die();
-    }
-
+    return $result;
 }
 
 function prepareAddressString(array $post): string
@@ -62,8 +51,9 @@ function prepareAddressString(array $post): string
     return $resStr;
 }
 
-function isUserExist(PDO $pdo, string $email): bool
+function isUserExist(string $email): bool
 {
+    global $pdo;
     $queryStr = 'SELECT COUNT(id) FROM users WHERE email = ?';
     $stmt = $pdo->prepare($queryStr);
     $stmt->execute([$email]);
@@ -71,8 +61,9 @@ function isUserExist(PDO $pdo, string $email): bool
     return $res[0];
 }
 
-function getUserIdByEmail(PDO $pdo, string $email)
+function getUserIdByEmail(string $email)
 {
+    global $pdo;
     $queryStr = 'SELECT id FROM users WHERE email = ?';
     $stmt = $pdo->prepare($queryStr);
     $stmt->execute([$email]);
@@ -83,8 +74,9 @@ function getUserIdByEmail(PDO $pdo, string $email)
     return $res[0];
 }
 
-function addNewUser(PDO $pdo, string $name, string $email): int
+function addNewUser(string $name, string $email): int
 {
+    global $pdo;
     $queryStr = 'INSERT INTO users (`name`, email) VALUES (:username, :email)';
     $stmt = $pdo->prepare($queryStr);
     $stmt->execute([
@@ -94,8 +86,9 @@ function addNewUser(PDO $pdo, string $name, string $email): int
     return $pdo->lastInsertId();
 }
 
-function addNewOrder(PDO $pdo, array $post, int $addedUserId): int
+function addNewOrder(array $post, int $addedUserId): int
 {
+    global $pdo;
     $address = prepareAddressString($post);
     $queryStr = 'INSERT INTO orders (user_id, address) VALUES (:user_id, :address)';
     $stmt = $pdo->prepare($queryStr);
@@ -106,8 +99,9 @@ function addNewOrder(PDO $pdo, array $post, int $addedUserId): int
     return $pdo->lastInsertId();
 }
 
-function getOrdersCountByUserId(PDO $pdo, int $id): int
+function getOrdersCountByUserId(int $id): int
 {
+    global $pdo;
     $queryStr = 'SELECT COUNT(*) FROM orders, users WHERE users.id = ? AND users.id = orders.user_id';
     $stmt = $pdo->prepare($queryStr);
     $stmt->execute([$id]);
@@ -118,26 +112,32 @@ function getOrdersCountByUserId(PDO $pdo, int $id): int
     return $res[0];
 }
 
-function runEngine(PDO $pdo, array $post)
+function runEngine(array $post)
 {
-    if (!isUserExist($pdo, $post['email'])) {
-        $addedUserId = addNewUser($pdo, $post['name'], $post['email']);
+    if (!isUserExist($post['email'])) {
+        $addedUserId = addNewUser($post['name'], $post['email']);
     } else {
-        $addedUserId = getUserIdByEmail($pdo, $post['email']);
+        $addedUserId = getUserIdByEmail($post['email']);
     }
 
-    $orderNum = addNewOrder($pdo, $post, $addedUserId);
+    $orderNum = addNewOrder($post, $addedUserId);
     $address = prepareAddressString($post);
-    $ordersCount = getOrdersCountByUserId($pdo, $addedUserId);
+    $ordersCount = getOrdersCountByUserId($addedUserId);
 
     $resStr = "Спасибо, ваш заказ будет доставлен по адресу: $address <br>" .
         "Номер вашего заказа: #$orderNum <br>" .
         "Это ваш $ordersCount-й заказ! <br>";
 
-    return ['info' => $resStr];
+    return $resStr;
 }
 
-validationForm($_POST);
-$pdo = connection(CONNECTION_STRING, DB_USER, DB_PASSWORD);
-$res = json_encode(runEngine($pdo, $_POST));
-echo $res;
+function main($data)
+{
+    $errors = validationForm($data);
+    if (!empty($errors)) {
+        return ['error' => $errors];
+    }
+    global $pdo;
+    $pdo = connection();
+    return ['result' => runEngine($data)];
+}
