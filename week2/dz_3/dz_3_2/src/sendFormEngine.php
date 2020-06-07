@@ -1,7 +1,5 @@
 <?php
 
-
-
 function connection()
 {
     if (empty(DB_HOST) || empty(DB_NAME) || empty(DB_USER)) {
