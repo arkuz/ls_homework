@@ -2,7 +2,7 @@
 
 
 
-function connection(): PDO
+function connection()
 {
     if (empty(DB_HOST) || empty(DB_NAME) || empty(DB_USER)) {
         throw new Exception('Configuration parameters are not filled');
@@ -10,7 +10,6 @@ function connection(): PDO
     global $pdo;
     $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';';
     $pdo = new PDO($dsn, DB_USER, DB_PASSWORD);
-    return $pdo;
 }
 
 function validationForm(array $post)
@@ -138,6 +137,6 @@ function main($data)
         return ['error' => $errors];
     }
     global $pdo;
-    $pdo = connection();
+    connection();
     return ['result' => runEngine($data)];
 }
