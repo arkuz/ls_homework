@@ -134,7 +134,7 @@ function main($data)
     if (!empty($errors)) {
         return ['error' => $errors];
     }
-    global $pdo;
+    //global $pdo;
     connection();
     return ['result' => runEngine($data)];
 }
