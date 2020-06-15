@@ -51,8 +51,8 @@ function prepareAddressString(array $post): string
 function isUserExist(string $email): bool
 {
     global $pdo;
-    $queryStr = 'SELECT COUNT(id) FROM users WHERE email = ?';
-    $stmt = $pdo->prepare($queryStr);
+    $sql = 'SELECT COUNT(id) FROM users WHERE email = ?';
+    $stmt = $pdo->prepare($sql);
     $stmt->execute([$email]);
     $res = $stmt->fetchAll(PDO::FETCH_COLUMN);
     return $res[0];
@@ -61,8 +61,8 @@ function isUserExist(string $email): bool
 function getUserIdByEmail(string $email)
 {
     global $pdo;
-    $queryStr = 'SELECT id FROM users WHERE email = ?';
-    $stmt = $pdo->prepare($queryStr);
+    $sql = 'SELECT id FROM users WHERE email = ?';
+    $stmt = $pdo->prepare($sql);
     $stmt->execute([$email]);
     $res = $stmt->fetchAll(PDO::FETCH_COLUMN);
     if (empty($res)) {
@@ -74,8 +74,8 @@ function getUserIdByEmail(string $email)
 function addNewUser(string $name, string $email): int
 {
     global $pdo;
-    $queryStr = 'INSERT INTO users (`name`, email) VALUES (:username, :email)';
-    $stmt = $pdo->prepare($queryStr);
+    $sql = 'INSERT INTO users (`name`, email) VALUES (:username, :email)';
+    $stmt = $pdo->prepare($sql);
     $stmt->execute([
         'username' => $name,
         'email' => $email
@@ -87,8 +87,8 @@ function addNewOrder(array $post, int $addedUserId): int
 {
     global $pdo;
     $address = prepareAddressString($post);
-    $queryStr = 'INSERT INTO orders (user_id, address) VALUES (:user_id, :address)';
-    $stmt = $pdo->prepare($queryStr);
+    $sql = 'INSERT INTO orders (user_id, address) VALUES (:user_id, :address)';
+    $stmt = $pdo->prepare($sql);
     $stmt->execute([
         'user_id' => $addedUserId,
         'address' => $address
@@ -99,8 +99,8 @@ function addNewOrder(array $post, int $addedUserId): int
 function getOrdersCountByUserId(int $id): int
 {
     global $pdo;
-    $queryStr = 'SELECT COUNT(*) FROM orders, users WHERE users.id = ? AND users.id = orders.user_id';
-    $stmt = $pdo->prepare($queryStr);
+    $sql = 'SELECT COUNT(*) FROM orders, users WHERE users.id = ? AND users.id = orders.user_id';
+    $stmt = $pdo->prepare($sql);
     $stmt->execute([$id]);
     $res = $stmt->fetchAll(PDO::FETCH_COLUMN);
     if (empty($res)) {
