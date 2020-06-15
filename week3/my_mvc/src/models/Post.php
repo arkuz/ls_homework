@@ -2,58 +2,55 @@
 
 namespace App\Models;
 
-use App\Models\BaseModel;
 use PDO;
 
 class Post extends BaseModel
 {
-
-    public function getAllPosts()
+    public function getAll()
     {
-        $queryStr = 'SELECT users.name, posts.message, posts.datetime, posts.id FROM posts JOIN users ON users.id = posts.user_id';
-        $stmt = $this->pdo->prepare($queryStr);
+        $sql = 'SELECT users.name, posts.message, posts.datetime, posts.id, posts.img FROM posts JOIN users ON users.id = posts.user_id';
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
-        $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        if (empty($res)) {
-            return false;
-        }
-        return $res;
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    function addNewPost($user_id, $message)
+    public function getAllByUserID($user_id)
     {
-        $queryStr = 'INSERT INTO posts (user_id, message) VALUES (:user_id, :message)';
-        $stmt = $this->pdo->prepare($queryStr);
+        $sql = 'SELECT users.name, posts.message, posts.datetime, posts.id, posts.img FROM posts JOIN users ON users.id = :user_id AND users.id = posts.user_id';
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
             'user_id' => $user_id,
+        ]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function get($id)
+    {
+        $sql = 'SELECT * FROM posts WHERE id = :id';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            'id' => $id,
+        ]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function add($user_id, $message, $img)
+    {
+        $sql = 'INSERT INTO posts (user_id, message, img) VALUES (:user_id, :message, :img)';
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
+            'user_id' => $user_id,
             'message' => $message,
+            'img' => $img,
         ]);
-
-        return $this->pdo->lastInsertId();
     }
 
-    public function getPost($id)
+    public function delete($id)
     {
-        $queryStr = 'SELECT * FROM posts WHERE id = :id';
-        $stmt = $this->pdo->prepare($queryStr);
-        $stmt->execute([
-            'id' => $id,
-        ]);
-        $res = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        if (empty($res)) {
-            return false;
-        }
-        return $res[0];
-    }
-
-
-    public function deletePost($id)
-    {
-        $queryStr = 'DELETE FROM posts WHERE id = :id';
-        $stmt = $this->pdo->prepare($queryStr);
-        $stmt->execute([
+        $sql = 'DELETE FROM posts WHERE id = :id';
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([
             'id' => $id,
         ]);
     }
-
 }

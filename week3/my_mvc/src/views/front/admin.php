@@ -5,11 +5,12 @@
     <title>Данные формы</title>
 </head>
 <a href="/user/logout/">Logout</a>
+<a href="/posts/">Posts</a>
 <h2>Admin panel</h2>
 <body>
 
 <?php /** @var array $error */ ?>
-<?php if (isset($error) ): ?>
+<?php if (isset($error)): ?>
     <ul style="color: red;">
         <?php foreach ($error as $value): ?>
             <li>
@@ -23,13 +24,14 @@
 <?php /** @var array $posts */ ?>
 <?php if (isset($posts)): ?>
     <?php foreach ($posts as $value): ?>
-        <div>
+        <div style="border-style: solid;">
             <p>
                 <b><?= "{$value['name']}  {$value['datetime']}" ?></b>
-                <a href="/admin/posts/delete?id=<?= "{$value['id']}" ?>">Удалить</a>
+                <a href="/admin/posts/delete?post_id=<?= "{$value['id']}" ?>">Удалить</a>
             </p>
             <?= "{$value['message']}" ?>
         </div>
+        <br>
     <?php endforeach; ?>
 <?php endif; ?>
 

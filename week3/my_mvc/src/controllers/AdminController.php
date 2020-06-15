@@ -6,20 +6,32 @@ use App\Models\Post;
 
 class AdminController extends BaseController
 {
-    public function index()
+    public function __construct()
     {
-        if (self::getUser()['is_admin']) {
-            $model = new Post();
-            $posts = $model->getAllPosts();
-            $this->render('front\admin', ['posts' => $posts]);
-            return 0;
+        parent::__construct();
+        if ($this->auth->guest() || !$this->auth->getUser()['is_admin']) {
+            header('Location: /');
+            exit();
         }
-        echo 'Только для админа';
     }
 
-    public function deletePosts()
+    public function index()
     {
-        var_dump('удаление постов админа');
+        $model = new Post();
+        $posts = $model->getAll();
+        return $this->render('front\admin', ['posts' => $posts]);
+    }
+
+    public function deletePost()
+    {
+        $postID = intval($_GET['post_id']);
+        $model = new Post();
+        $post = $model->get($postID);
+        if (!empty($post)) {
+            $model->delete($postID);
+        }
+        header('Location: /admin/posts');
+        exit();
     }
 
 }

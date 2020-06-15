@@ -4,28 +4,38 @@ namespace App\Auth;
 
 /**
  * Class Auth
- * @package App\Service
+ * @package App\Auth
  */
 class Auth
 {
     const SESSION_INDEX_USER = 'user';
 
-    public static function getUser()
+    /**
+     * @return mixed
+     */
+    public function getUser()
     {
         return $_SESSION[self::SESSION_INDEX_USER];
     }
 
-    public static function isUserLogin()
+    /**
+     * @return bool
+     */
+    public function guest()
     {
-        return !empty($_SESSION[self::SESSION_INDEX_USER]);
+        return empty($_SESSION[self::SESSION_INDEX_USER]);
     }
 
-    public static function setLogin(array $user)
+    /**
+     * @param array $user
+     */
+    public function login(array $user)
     {
         $_SESSION[self::SESSION_INDEX_USER] = $user;
     }
 
-    public static function setLogout()
+
+    public function logout()
     {
         $_SESSION[self::SESSION_INDEX_USER] = null;
     }

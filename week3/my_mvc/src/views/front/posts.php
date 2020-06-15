@@ -5,12 +5,15 @@
     <title>Данные формы</title>
 </head>
 <a href="/user/logout/">Logout</a>
+<a href="/admin/">Admin panel</a>
+
 <body>
 <h2>Posts</h2>
-<form action="/posts/send/" method="post">
+<form enctype="multipart/form-data" action="/posts/send/" method="post">
     <p>
         Message<br>
-        <textarea name="message">Привет, как дела?</textarea>
+        <textarea name="message">Привет, как дела?</textarea><br>
+        <input name="userfile" type="file">
     </p>
     <p><input type="submit" value="Send"></p>
 </form>
@@ -19,7 +22,7 @@
 <br>
 
 <?php /** @var array $error */ ?>
-<?php if (isset($error) ): ?>
+<?php if (isset($error)): ?>
     <ul style="color: red;">
         <?php foreach ($error as $value): ?>
             <li>
@@ -33,12 +36,18 @@
 <?php /** @var array $posts */ ?>
 <?php if (isset($posts)): ?>
     <?php foreach ($posts as $value): ?>
-        <div>
+        <div style="border-style: solid;">
             <p>
                 <b><?= "{$value['name']}  {$value['datetime']}" ?></b>
             </p>
+
+            <?php if (!empty($value['img'])): ?>
+                <img height="100" src='/img/<?= "{$value['img']}" ?>'><br>
+            <?php endif; ?>
+
             <?= "{$value['message']}" ?>
         </div>
+        <br>
     <?php endforeach; ?>
 <?php endif; ?>
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Июн 13 2020 г., 02:21
+-- Время создания: Июн 16 2020 г., 02:23
 -- Версия сервера: 5.7.29
 -- Версия PHP: 7.2.29
 
@@ -31,6 +31,7 @@ CREATE TABLE `posts` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `message` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `img` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -38,21 +39,10 @@ CREATE TABLE `posts` (
 -- Дамп данных таблицы `posts`
 --
 
-INSERT INTO `posts` (`id`, `user_id`, `message`, `datetime`) VALUES
-(1, 50, 'Пока', '2020-06-12 17:08:44'),
-(2, 50, 'Тест', '2020-06-12 17:08:44'),
-(3, 50, 'Привет', '2020-06-12 17:08:46'),
-(4, 50, 'Еще один пост', '2020-06-12 17:08:46'),
-(5, 5, 'я нет меня', '2020-06-12 17:18:55'),
-(6, 5, 'я нет меня тоже нет ваще 5555', '2020-06-12 17:19:00'),
-(7, 50, 'Привет, как дела?', '2020-06-13 00:44:33'),
-(8, 50, 'Привет, как дела?', '2020-06-13 00:47:24'),
-(9, 50, 'Привет, как дела?', '2020-06-13 00:47:43'),
-(10, 50, 'Привет, как дела?', '2020-06-13 00:48:44'),
-(11, 50, 'Привет, как дела?352325', '2020-06-13 00:50:07'),
-(12, 50, 'Привет, как дела?', '2020-06-13 00:50:36'),
-(13, 50, '', '2020-06-13 00:51:39'),
-(14, 50, '&lt;b&gt;gdfgdgdg&lt;/b&gt;', '2020-06-13 01:12:49');
+INSERT INTO `posts` (`id`, `user_id`, `message`, `img`, `datetime`) VALUES
+(42, 53, 'Привет, как дела?', '1592263094.jpg', '2020-06-16 02:18:16'),
+(43, 53, 'Без картинки', '', '2020-06-16 02:18:49'),
+(44, 57, 'Эгегей!!!', '1592263212.png', '2020-06-16 02:20:14');
 
 -- --------------------------------------------------------
 
@@ -73,9 +63,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `name`, `password`, `is_admin`) VALUES
-(50, 'art@example.com', 'Artem', 'd40d8ae8dad378e14f50c1ad8520c1dc6cb2692b', 1),
-(51, 'art1@example.com', 'Artem', 'd40d8ae8dad378e14f50c1ad8520c1dc6cb2692b', 0),
-(52, 'art2@example.com', 'Artem', 'd40d8ae8dad378e14f50c1ad8520c1dc6cb2692b', 0);
+(53, 'art@example.com', 'Artem', '$2y$10$WltP3MMeeu8O9YujDjik1Or55Ue0hLXdB0N7TIHa5iJXYnkbwteJi', 1),
+(57, 'test@example.com', 'Test', '$2y$10$Pg8Rtdi3Q5MJ2kfJyWbvCeTNpnBxNna6pUlecbaUoq6R6e0j8sxDy', 0);
 
 --
 -- Индексы сохранённых таблиц
@@ -101,13 +90,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
