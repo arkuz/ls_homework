@@ -51,7 +51,7 @@ class PostController extends BaseController
         $ext = explode('.', $files['userfile']['name']);
         $ext = array_pop($ext);
         $types = array('image/gif', 'image/png', 'image/jpeg');
-        if (!in_array($_FILES['userfile']['type'], $types)) {
+        if (!in_array($files['userfile']['type'], $types)) {
             return '';
         }
 
