@@ -1,8 +1,8 @@
 <?php
 
-namespace App\View;
+namespace App\Services;
 
-use App\ViewInterface\ViewInterface;
+use App\Services\ViewInterface;
 
 class ViewTwig implements ViewInterface
 {
