@@ -3,44 +3,50 @@
 namespace App\Controllers;
 
 use App\Models\Post;
+use App\View\ViewNative;
 
 class PostController extends BaseController
 {
     public function __construct()
     {
         parent::__construct();
+        $this->view = new ViewNative();
         if ($this->auth->guest()) {
-            header('Location: /');
-            exit();
+            $this->redirect('/');
         }
     }
 
+    /**
+     * Главная страница отображения всех постов.
+     * @throws \Exception
+     */
     public function index()
     {
         $model = new Post();
         $posts = $model->getAll();
-        return $this->render('front\posts', ['posts' => $posts]);
+        return $this->view->render('\front\posts', ['posts' => $posts]);
     }
 
-    public function add()
+    /**
+     * Добавление поста.
+     * @throws \Exception
+     */
+    public function add($data, $files)
     {
-        $img = $this->addImage($_FILES);
+        $img = $this->addImage($files);
         $user = $this->auth->getUser();
         $model = new Post();
-        $message = htmlspecialchars($_POST['message']);
+        $message = $data['message'] ? isset($data['message']) : '';
+        $message = htmlspecialchars($message);
         $model->add($user['id'], $message, $img);
-        header('Location: /posts');
-        exit();
+        $this->redirect('/posts');
     }
 
-    public function getAllByUserID()
-    {
-        $userID = intval($_GET['user_id']);
-        $model = new Post();
-        $posts = ['posts' => $model->getAllByUserID($userID)];
-        $this->renderJSON($posts);
-    }
-
+    /**
+     * Добавить изображение к посту.
+     * @param $files
+     * @return string
+     */
     private function addImage($files)
     {
         if (!isset($files)) {

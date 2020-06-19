@@ -3,35 +3,45 @@
 namespace App\Controllers;
 
 use App\Models\Post;
+use App\View\ViewNative;
 
 class AdminController extends BaseController
 {
     public function __construct()
     {
         parent::__construct();
+        $this->view = new ViewNative();
         if ($this->auth->guest() || !$this->auth->getUser()['is_admin']) {
-            header('Location: /');
-            exit();
+            $this->redirect('/');
         }
     }
 
+    /**
+     * Главная страница админки.
+     * @throws \Exception
+     */
     public function index()
     {
         $model = new Post();
         $posts = $model->getAll();
-        return $this->render('front\admin', ['posts' => $posts]);
+        return $this->view->render('front\admin', ['posts' => $posts]);
     }
 
-    public function deletePost()
+    /**
+     * Удалить пост пользователя.
+     * @param array $data
+     * @throws \Exception
+     */
+    public function deletePost(array $data)
     {
-        $postID = intval($_GET['post_id']);
-        $model = new Post();
-        $post = $model->get($postID);
-        if (!empty($post)) {
-            $model->delete($postID);
+        if (isset($data['post_id']) && $data['post_id'] > 0) {
+            $model = new Post();
+            $post = $model->get($data['post_id']);
+            if (!empty($post)) {
+                $model->delete($post['id']);
+            }
         }
-        header('Location: /admin/posts');
-        exit();
+        $this->redirect('/admin/posts');
     }
 
 }

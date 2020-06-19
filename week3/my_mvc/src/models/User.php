@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use App\Models\BaseModel;
 use PDO;
 
-class User extends BaseModel
+class User extends Base
 {
     public function get(string $email)
     {

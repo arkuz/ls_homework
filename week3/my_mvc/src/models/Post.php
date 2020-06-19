@@ -4,19 +4,25 @@ namespace App\Models;
 
 use PDO;
 
-class Post extends BaseModel
+class Post extends Base
 {
     public function getAll()
     {
-        $sql = 'SELECT users.name, posts.message, posts.datetime, posts.id, posts.img FROM posts JOIN users ON users.id = posts.user_id';
+        $sql = 'SELECT users.name, posts.message, posts.datetime, posts.id, posts.img
+                FROM posts 
+                JOIN users ON users.id = posts.user_id';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getAllByUserID($user_id)
+    public function getAllByUserID($user_id, $limit = 20)
     {
-        $sql = 'SELECT users.name, posts.message, posts.datetime, posts.id, posts.img FROM posts JOIN users ON users.id = :user_id AND users.id = posts.user_id';
+        $sql = 'SELECT users.name, posts.message, posts.datetime, posts.id, posts.img
+                FROM posts 
+                JOIN users ON users.id = posts.user_id
+                WHERE users.id = :user_id
+                LIMIT ' . $limit;
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
             'user_id' => $user_id,

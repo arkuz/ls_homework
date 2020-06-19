@@ -7,21 +7,21 @@ use App\Auth\Auth;
 class BaseController
 {
     protected $auth;
+    protected $view;
 
     public function __construct()
     {
         $this->auth = new Auth();
     }
 
-    protected function render($template, $data)
+    /**
+     * Метод редиректа
+     * @param $location
+     */
+    public function redirect($location)
     {
-        extract($data);
-        include __DIR__ . '\..\views\\' . $template . '.php';
-    }
-
-    protected function renderJSON($data)
-    {
-        echo json_encode($data);
+        header("Location: $location");
+        exit();
     }
 }
 

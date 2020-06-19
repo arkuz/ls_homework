@@ -3,15 +3,16 @@
 namespace App\Controllers;
 
 use App\Models\User;
+use App\View\ViewNative;
 
 class RegisterController extends BaseController
 {
     public function __construct()
     {
         parent::__construct();
+        $this->view = new ViewNative();
         if (!$this->auth->guest()) {
-            header('Location: /posts');
-            exit();
+            $this->redirect('/posts');
         }
     }
 
@@ -20,57 +21,78 @@ class RegisterController extends BaseController
      */
     public function index()
     {
-        return $this->render('front\index', []);
+        return $this->view->render('front\index', []);
     }
 
     /**
-     * Обработка POST данных и добавление пользователя.
+     * Валидация POST при добавлении пользователя.
+     * @param array $data
+     * @throws \Exception
      */
-    public function add()
+    public function checkAdd(array $data)
     {
-        $error = $this->validationRegisterForm($_POST);
-        $email = htmlspecialchars(trim($_POST['email']));
+        $error = $this->validationRegisterForm($data);
 
+        $email = htmlspecialchars(trim($data['email']));
         $model = new User();
         $user = $model->get($email);
 
         if (!empty($user)) {
-            $error[] = "User with email '$email' alredy exist";
+            $error[] = 6;
         }
 
         if (!empty($error)) {
-            return $this->render('front\index', ['error' => $error]);
+            $this->view = new ViewNative();
+            return $this->view->render(
+                'front\index',
+                [
+                    'error' => $error,
+                    'user' => $user
+                ]);
         }
-
-        // добавляем пользователя
-        $name = htmlspecialchars(trim($_POST['name']));
-        $passwordHash = password_hash(trim($_POST['password']), PASSWORD_DEFAULT);
-        $model->add($name, $email, $passwordHash);
-
-        // выполняем авторизацию сразу после добавления
-        $user = $model->get($email);
-        $this->auth->login($user);
-        header('Location: /posts');
-        exit();
     }
 
+    /**
+     * Добавление пользователя (регистрация).
+     * @param array $data
+     * @throws \Exception
+     */
+    public function add(array $data)
+    {
+        $model = new User();
+        $email = htmlspecialchars(trim($data['email']));
+        $name = htmlspecialchars(trim($data['name']));
+        $passwordHash = password_hash(trim($data['password']), PASSWORD_DEFAULT);
+        $model->add($name, $email, $passwordHash);
+
+        // выполняем авторизацию сразу после регистрации
+        $user = $model->get($email);
+        $this->auth->login($user);
+        $this->redirect('/posts');
+    }
+
+    /**
+     * Валидация формы регистрации. Возвращает массив с кодами ошибок.
+     * @param array $post
+     * @return array
+     */
     private function validationRegisterForm(array $post)
     {
         $result = [];
         if (empty($post['name'])) {
-            $result[] = 'name is empty';
+            $result[] = 1;
         }
         if (empty($post['email'])) {
-            $result[] = 'email is empty';
+            $result[] = 2;
         }
         if (empty($post['password'])) {
-            $result[] = 'password is empty';
+            $result[] = 3;
         }
         if (mb_strlen($post['password']) < 4) {
-            $result[] = 'password must be more than 4 characters';
+            $result[] = 4;
         }
         if ($post['password'] !== $post['password2']) {
-            $result[] = 'passwords don\'t match';
+            $result[] = 5;
         }
         return $result;
     }

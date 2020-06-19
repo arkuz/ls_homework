@@ -7,7 +7,7 @@ use PDO;
 
 require_once __DIR__ . "/../../config.php";
 
-class BaseModel
+class Base
 {
     protected $pdo;
 
