@@ -10,7 +10,6 @@ class RegisterController extends BaseController
     public function __construct()
     {
         parent::__construct();
-        $this->view = new ViewNative();
         if (!$this->auth->guest()) {
             $this->redirect('/posts');
         }

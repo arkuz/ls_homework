@@ -10,7 +10,6 @@ class AdminController extends BaseController
     public function __construct()
     {
         parent::__construct();
-        $this->view = new ViewTwig();
         if ($this->auth->guest() || !$this->auth->getUser()['is_admin']) {
             $this->redirect('/');
         }

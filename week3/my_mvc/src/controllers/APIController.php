@@ -9,8 +9,8 @@ class APIController extends BaseController
 {
     public function __construct()
     {
-        $this->view = new ViewJSON();
         parent::__construct();
+        $this->view = new ViewJSON();
         if ($this->auth->guest()) {
             $this->redirect('/');
         }
