@@ -9,5 +9,5 @@
 
 4. Папка `week4` - Неделя #4 Внедрение сторонних библиотек.
     * SwiftMailer - отправка почты.
-    * Twig
+    * Twig - шаблонизатор использован в проекте ["MVC"](https://github.com/arkuz/ls_homework/tree/master/week3/my_mvc) для админки.
     * Intervention/Image - изменение изображения.
