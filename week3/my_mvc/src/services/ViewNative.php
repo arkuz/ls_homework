@@ -10,6 +10,6 @@ class ViewNative implements ViewInterface
     public function render($template, $data = [])
     {
         extract($data);
-        include __DIR__ . '\..\templates\\' . $template . '.php';
+        include __DIR__ . '\..\views\\' . $template . '.php';
     }
 }
