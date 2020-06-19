@@ -2,20 +2,7 @@
 
 session_start();
 
-include __DIR__ . "\..\src\models\Base.php";
-include __DIR__ . "\..\src\models\User.php";
-include __DIR__ . "\..\src\models\Post.php";
-include __DIR__ . "\..\src\Auth.php";
-include __DIR__ . "\..\src\controllers\BaseController.php";
-include __DIR__ . "\..\src\controllers\AdminController.php";
-include __DIR__ . "\..\src\controllers\UserController.php";
-include __DIR__ . "\..\src\controllers\RegisterController.php";
-include __DIR__ . "\..\src\controllers\PostController.php";
-include __DIR__ . "\..\src\controllers\LogoutController.php";
-include __DIR__ . "\..\src\controllers\APIController.php";
-include __DIR__ . "\..\src\\services\ViewInterface.php";
-include __DIR__ . "\..\src\\views\ViewJSON.php";
-include __DIR__ . "\..\src\\views\ViewNative.php";
+require_once __DIR__ . '\..\..\..\vendor\autoload.php';
 
 $requestURI = $_SERVER['REQUEST_URI'];
 

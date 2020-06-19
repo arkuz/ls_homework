@@ -2,7 +2,8 @@
 
 namespace App\View;
 
-use ViewInterface;
+
+use App\ViewInterface\ViewInterface;
 
 class ViewNative implements ViewInterface
 {

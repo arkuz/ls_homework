@@ -2,5 +2,14 @@
   "require": {
     "swiftmailer/swiftmailer": "^6.0",
     "intervention/image": "^2.5.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\Controllers\\": "week3/my_mvc/src/controllers",
+      "App\\Models\\": "week3/my_mvc/src/models",
+      "App\\View\\": "week3/my_mvc/src/views",
+      "App\\Auth\\": "week3/my_mvc/src/services",
+      "App\\ViewInterface\\": "week3/my_mvc/src/services"
+    }
   }
 }

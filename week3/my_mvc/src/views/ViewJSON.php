@@ -2,7 +2,7 @@
 
 namespace App\View;
 
-use ViewInterface;
+use App\ViewInterface\ViewInterface;
 
 class ViewJSON implements ViewInterface
 {
