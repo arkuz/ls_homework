@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Данные формы</title>
+</head>
+<a href="/user/logout/">Logout</a>
+<a href="/posts/">Posts</a>
+<h2>Admin panel</h2>
+<body>
+
+
+{% for post in posts %}
+<div style="border-style: solid;">
+    <p>
+        <b>{{ post.name }}  {{ post.datetime }}</b>
+        <a href="/admin/posts/delete?post_id={{ post.id }}">Удалить</a>
+    </p>
+
+    {% if post.img %}
+        <img height="100" src='/img/{{post.img }}'><br>
+    {% endif %}
+
+    {{ post.message }}
+</div><br>
+{% endfor %}
+
+
+</body>
+</html>

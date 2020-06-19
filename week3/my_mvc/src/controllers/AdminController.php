@@ -3,14 +3,14 @@
 namespace App\Controllers;
 
 use App\Models\Post;
-use App\View\ViewNative;
+use App\View\ViewTwig;
 
 class AdminController extends BaseController
 {
     public function __construct()
     {
         parent::__construct();
-        $this->view = new ViewNative();
+        $this->view = new ViewTwig();
         if ($this->auth->guest() || !$this->auth->getUser()['is_admin']) {
             $this->redirect('/');
         }
