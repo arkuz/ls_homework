@@ -36,7 +36,11 @@ class PostController extends BaseController
         $img = $this->addImage($files);
         $user = $this->auth->getUser();
         $model = new Post();
-        $message = $data['message'] ? isset($data['message']) : '';
+        if (isset($data['message'])) {
+            $message = $data['message'];
+        } else {
+            $message = '';
+        }
         $message = htmlspecialchars($message);
         $model->add($user['id'], $message, $img);
         $this->redirect('/posts');
