@@ -37,9 +37,10 @@ class UserController extends BaseController
     {
         $error = $this->validationLoginForm($data);
         $email = htmlspecialchars(trim($data['email']));
+        $password = trim($data['password']);
         $model = new User();
         $user = $model->get($email);
-        if (empty($user)) {
+        if (empty($user) || !password_verify($password, $user['password'])) {
             $error[] = 9;
         }
 
@@ -49,7 +50,6 @@ class UserController extends BaseController
             $this->redirect("/user/login?error=$error_list");
         }
 
-        $password = trim($data['password']);
         // если пароль совпал, то логинимся
         if (password_verify($password, $user['password'])) {
             $this->auth->login($user);
