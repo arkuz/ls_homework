@@ -12,8 +12,8 @@ $requestURI = $_SERVER['REQUEST_URI'];
  */
 if (!empty($_POST) && strpos($requestURI, '/user/register') !== false) {
     $controller = new \App\Controllers\RegisterController();
-    $controller->checkAdd($_POST);
-    // ничего не возвращаем, чтобы не прерывать выполнение и продолжать проверки
+    $controller->add($_POST);
+    return 0;
 }
 
 /**
@@ -21,7 +21,7 @@ if (!empty($_POST) && strpos($requestURI, '/user/register') !== false) {
  */
 if (strpos($requestURI, '/user/register') !== false) {
     $controller = new \App\Controllers\RegisterController();
-    $controller->add($_POST);
+    $controller->view($_GET);
     return 0;
 }
 
@@ -30,8 +30,8 @@ if (strpos($requestURI, '/user/register') !== false) {
  */
 if (!empty($_POST) && strpos($requestURI, '/user/login') !== false) {
     $controller = new \App\Controllers\UserController();
-    $controller->checkLogin($_POST);
-    //return 0;
+    $controller->login($_POST);
+    return 0;
 }
 
 /**
@@ -39,7 +39,7 @@ if (!empty($_POST) && strpos($requestURI, '/user/login') !== false) {
  */
 if (strpos($requestURI, '/user/login') !== false) {
     $controller = new \App\Controllers\UserController();
-    $controller->login($_POST);
+    $controller->view($_GET);
     return 0;
 }
 
@@ -101,4 +101,4 @@ if (strpos($requestURI, '/posts') !== false) {
  * Главная.
  */
 $controller = new \App\Controllers\RegisterController();
-$controller->index();
+$controller->view($_GET);

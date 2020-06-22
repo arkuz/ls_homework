@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Models\User;
-use App\View\ViewNative;
 
 class RegisterController extends BaseController
 {
@@ -15,23 +14,30 @@ class RegisterController extends BaseController
         }
     }
 
-    /**
-     * Форма регистрации и авторизации.
-     */
-    public function index()
-    {
-        return $this->view->render('front\index', []);
-    }
 
     /**
-     * Валидация POST при добавлении пользователя.
+     * Метод отрисовки страницы регистрации.
+     * @param array $data
+     */
+    public function view(array $data)
+    {
+        $renderParams = [];
+        if (isset($data['error'])) {
+            $error = explode(',', $data['error']);
+            $renderParams = ['error' => $error];
+        }
+        return $this->view->render('front\index', $renderParams);
+    }
+
+
+    /**
+     * * Добавление пользователя (регистрация).
      * @param array $data
      * @throws \Exception
      */
-    public function checkAdd(array $data)
+    public function add(array $data)
     {
         $error = $this->validationRegisterForm($data);
-
         $email = htmlspecialchars(trim($data['email']));
         $model = new User();
         $user = $model->get($email);
@@ -40,24 +46,13 @@ class RegisterController extends BaseController
             $error[] = 6;
         }
 
+        // если есть ошибки, то выполняем редирект и передаем ошибки в GET
         if (!empty($error)) {
-            $this->view = new ViewNative();
-            return $this->view->render(
-                'front\index',
-                [
-                    'error' => $error,
-                    'user' => $user
-                ]);
+            $error_list = implode(',', $error);
+            $this->redirect("/user/register?error=$error_list");
         }
-    }
 
-    /**
-     * Добавление пользователя (регистрация).
-     * @param array $data
-     * @throws \Exception
-     */
-    public function add(array $data)
-    {
+        // добавляем пользователя
         $model = new User();
         $email = htmlspecialchars(trim($data['email']));
         $name = htmlspecialchars(trim($data['name']));
@@ -69,6 +64,7 @@ class RegisterController extends BaseController
         $this->auth->login($user);
         $this->redirect('/posts');
     }
+
 
     /**
      * Валидация формы регистрации. Возвращает массив с кодами ошибок.
