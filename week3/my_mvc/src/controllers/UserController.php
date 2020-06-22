@@ -23,7 +23,7 @@ class UserController extends BaseController
         $renderParams = [];
         if (isset($data['error'])) {
             $error = explode(',', $data['error']);
-            $renderParams = ['error' => $error];
+            $renderParams += ['error' => $error];
         }
         return $this->view->render('front\index', $renderParams);
     }

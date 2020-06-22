@@ -24,7 +24,10 @@ class RegisterController extends BaseController
         $renderParams = [];
         if (isset($data['error'])) {
             $error = explode(',', $data['error']);
-            $renderParams = ['error' => $error];
+            $renderParams += ['error' => $error];
+        }
+        if (isset($data['email'])) {
+            $renderParams += ['email' => $data['email']];
         }
         return $this->view->render('front\index', $renderParams);
     }
@@ -42,19 +45,24 @@ class RegisterController extends BaseController
         $model = new User();
         $user = $model->get($email);
 
+        $errorEmail = '';
         if (!empty($user)) {
             $error[] = 6;
+            $errorEmail = $email;
         }
 
         // если есть ошибки, то выполняем редирект и передаем ошибки в GET
         if (!empty($error)) {
             $error_list = implode(',', $error);
-            $this->redirect("/user/register?error=$error_list");
+            $params = "/user/register?error=$error_list";
+            if (!empty($errorEmail)) {
+                $params .= "&email=$errorEmail";
+            }
+            $this->redirect($params);
         }
 
         // добавляем пользователя
         $model = new User();
-        $email = htmlspecialchars(trim($data['email']));
         $name = htmlspecialchars(trim($data['name']));
         $passwordHash = password_hash(trim($data['password']), PASSWORD_DEFAULT);
         $model->add($name, $email, $passwordHash);

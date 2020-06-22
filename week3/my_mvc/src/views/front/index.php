@@ -27,13 +27,18 @@
 
 <?php
 // Расшифровка кодов ошибок для вывода пользователю.
+
+if (!isset($email)) {
+    $email = '';
+}
+
 $errors_text = [
     1 => 'name is empty',
     2 => 'email is empty',
     3 => 'password is empty',
     4 => 'password must be more than 4 characters',
     5 => 'passwords don\'t match',
-    6 => 'user with this email is alredy exist',
+    6 => "user with email '$email' is alredy exist",
     7 => 'email is empty',
     8 => 'password is empty',
     9 => 'user with this username / password was not found',
