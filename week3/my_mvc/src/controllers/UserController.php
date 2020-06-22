@@ -40,7 +40,8 @@ class UserController extends BaseController
         $password = trim($data['password']);
         $model = new User();
         $user = $model->get($email);
-        if (empty($user) || !password_verify($password, $user['password'])) {
+        $passwordVerify = password_verify($password, $user['password']);
+        if (empty($user) || !$passwordVerify) {
             $error[] = 9;
         }
 
@@ -51,7 +52,7 @@ class UserController extends BaseController
         }
 
         // если пароль совпал, то логинимся
-        if (password_verify($password, $user['password'])) {
+        if ($passwordVerify) {
             $this->auth->login($user);
             $this->redirect('/posts');
         }
